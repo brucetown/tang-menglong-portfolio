@@ -187,7 +187,6 @@ function App() {
   const heroVideoRef = useRef(null);
   const heroForegroundVideoRef = useRef(null);
   const heroMobileIntroRef = useRef(null);
-  const screeningVideoRefs = useRef({});
   const lightboxVideoRef = useRef(null);
   const photographyRef = useRef(null);
   const photographyStickyRef = useRef(null);
@@ -237,6 +236,15 @@ function App() {
       foreground.play().catch(() => {});
     }
   };
+
+  useEffect(() => {
+    const deferredImages = document.querySelectorAll('img[loading="lazy"]');
+
+    deferredImages.forEach((image) => {
+      image.decoding = "async";
+      image.fetchPriority = "low";
+    });
+  }, []);
 
   useEffect(() => {
     const section = photographyRef.current;
@@ -739,36 +747,17 @@ function App() {
     element.style.setProperty("--float-y", "0px");
   }
 
-  function toggleScreeningVideo(videoId) {
-    const selectedVideo = screeningVideoRefs.current[videoId];
-    if (!selectedVideo) return;
-
-    if (activeScreening === videoId) {
-      selectedVideo.pause();
-      setActiveScreening(null);
-      return;
-    }
-
-    if (activeScreening) {
-      screeningVideoRefs.current[activeScreening]?.pause();
-    }
-
-    setActiveScreening(videoId);
-    selectedVideo.play().catch(() => {});
-  }
-
   function playScreeningVideo(item) {
     const shouldUseLightbox =
       window.matchMedia?.("(max-width: 820px)")?.matches ?? isCompactViewport;
 
     if (shouldUseLightbox) {
-      screeningVideoRefs.current[item.id]?.pause();
       setActiveScreening(null);
       setScreeningLightbox(item);
       return;
     }
 
-    toggleScreeningVideo(item.id);
+    setActiveScreening((current) => (current === item.id ? null : item.id));
   }
 
   return (
@@ -1315,18 +1304,26 @@ function App() {
                     data-testid={`screening-card-${item.id}`}
                   >
                     <div className="screening-frame">
-                      <video
-                        ref={(node) => {
-                          if (node) screeningVideoRefs.current[item.id] = node;
-                        }}
-                        src={item.src}
-                        poster={item.poster}
-                        preload="metadata"
-                        playsInline
-                        controls={isActive}
-                        data-testid={`screening-video-${item.id}`}
-                        onEnded={() => setActiveScreening(null)}
-                      />
+                      {isActive ? (
+                        <video
+                          src={item.src}
+                          poster={item.poster}
+                          preload="auto"
+                          autoPlay
+                          playsInline
+                          controls
+                          data-testid={`screening-video-${item.id}`}
+                          onEnded={() => setActiveScreening(null)}
+                        />
+                      ) : (
+                        <img
+                          src={item.poster}
+                          alt={`${item.title} 封面`}
+                          loading="lazy"
+                          decoding="async"
+                          fetchpriority="low"
+                        />
+                      )}
                       {!isActive && (
                         <button
                           className="screening-play"

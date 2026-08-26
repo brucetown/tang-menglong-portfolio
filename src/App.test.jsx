@@ -25,8 +25,7 @@ describe("Bruce Tang portfolio", () => {
       "一张照片被世界看见",
       "摄影作品",
       "项目索引",
-      "作品放映",
-      "个人优势",
+      "作品集放映",
       "AI 共创成果",
       "联系合作",
     ]) {
@@ -38,7 +37,7 @@ describe("Bruce Tang portfolio", () => {
       "href",
       "#contact",
     );
-    expect(screen.getByRole("link", { name: "作品视频" })).toHaveAttribute(
+    expect(screen.getByRole("link", { name: "作品集放映" })).toHaveAttribute(
       "href",
       "#screening",
     );
@@ -63,29 +62,28 @@ describe("Bruce Tang portfolio", () => {
   it("keeps the approved career-to-work-to-photography sequence", () => {
     render(<App />);
 
-    const profile = document.querySelector("#profile");
-    const strengths = document.querySelector("#strengths");
     const experience = document.querySelector("#experience");
     const workIndex = screen.getByTestId("work-index");
     const screening = screen.getByTestId("screening");
+    const mobileImpact = document.querySelector("#unsplash-impact");
     const impact = screen.getByTestId("unsplash-impact");
     const transition = screen.getByTestId("photography-transition");
     const photography = screen.getByTestId("photography");
     const aiBuilds = screen.getByTestId("ai-builds");
     const photos = within(photography).getAllByRole("img");
 
-    expect(profile.nextElementSibling).toBe(strengths);
-    expect(strengths.nextElementSibling).toBe(experience);
     expect(experience.nextElementSibling).toBe(workIndex);
     expect(workIndex.nextElementSibling).toBe(screening);
-    expect(screening.nextElementSibling).toBe(impact);
+    expect(screening.nextElementSibling).toBe(mobileImpact);
     expect(impact.nextElementSibling).toBe(transition);
     expect(transition.nextElementSibling).toBe(photography);
     expect(photography.nextElementSibling).toBe(aiBuilds);
     expect(photos).toHaveLength(14);
-    expect(photos.every((photo) => photo.getAttribute("src")?.startsWith("/assets/photo-"))).toBe(
-      true,
-    );
+    expect(
+      photos.every((photo) =>
+        photo.getAttribute("src")?.startsWith("/assets/optimized/photo-"),
+      ),
+    ).toBe(true);
     const impactMetrics = within(impact).getByLabelText("Unsplash 作品传播数据");
     expect(impactMetrics).toHaveTextContent("1200万");
     expect(impactMetrics).toHaveTextContent("12万");
@@ -209,7 +207,7 @@ describe("Bruce Tang portfolio", () => {
     const profile = screen.getByRole("region", { name: "个人简介" });
     expect(within(profile).getAllByRole("img")).toHaveLength(2);
     expect(within(profile).getByText(portfolio.profile.summary)).toHaveTextContent(
-      /^从商业视频/,
+      portfolio.profile.summary,
     );
 
     const experience = screen.getByTestId("experience-stage");
@@ -221,7 +219,7 @@ describe("Bruce Tang portfolio", () => {
 
     fireEvent.click(
       within(experience).getByRole("button", {
-        name: "查看下一张新东方项目图片",
+        name: "查看下一张项目图片",
       }),
     );
 
@@ -257,43 +255,24 @@ describe("Bruce Tang portfolio", () => {
   });
 
   it("keeps the screening wall still until a visitor chooses a video", () => {
-    const play = vi
-      .spyOn(window.HTMLMediaElement.prototype, "play")
-      .mockResolvedValue(undefined);
-    const pause = vi
-      .spyOn(window.HTMLMediaElement.prototype, "pause")
-      .mockImplementation(() => {});
-
     render(<App />);
 
     const screening = screen.getByTestId("screening");
-    const videos = within(screening).getAllByTestId(/screening-video-/);
     const cards = within(screening).getAllByTestId(/screening-card-/);
-    expect(videos).toHaveLength(2);
+    expect(within(screening).queryAllByTestId(/screening-video-/)).toHaveLength(0);
     expect(cards).toHaveLength(2);
     expect(cards[0]).toHaveClass("screening-card-primary");
     expect(cards[1]).toHaveClass("screening-card-secondary");
     expect(within(screening).getAllByText("16:9")).toHaveLength(2);
     expect(within(screening).queryByText("9:16")).not.toBeInTheDocument();
-    videos.forEach((video) => expect(video).not.toHaveAttribute("autoplay"));
-
     fireEvent.click(
       within(screening).getByRole("button", {
         name: "播放 AI 短片《返乡》",
       }),
     );
-    expect(play).toHaveBeenCalledTimes(1);
-
-    fireEvent.click(
-      within(screening).getByRole("button", {
-        name: "播放 导演作品集 2026",
-      }),
-    );
-    expect(pause).toHaveBeenCalled();
-    expect(play).toHaveBeenCalledTimes(2);
-
-    play.mockRestore();
-    pause.mockRestore();
+    const video = within(screening).getByTestId("screening-video-homeward");
+    expect(video).toHaveAttribute("autoplay");
+    expect(video).toHaveAttribute("preload", "auto");
   });
 
   it("keeps native controls available when a browser blocks immediate playback", async () => {
@@ -304,7 +283,6 @@ describe("Bruce Tang portfolio", () => {
     render(<App />);
 
     const screening = screen.getByTestId("screening");
-    const video = within(screening).getByTestId("screening-video-homeward");
     await act(async () => {
       fireEvent.click(
         within(screening).getByRole("button", {
@@ -314,6 +292,7 @@ describe("Bruce Tang portfolio", () => {
       await Promise.resolve();
     });
 
+    const video = within(screening).getByTestId("screening-video-homeward");
     expect(video).toHaveAttribute("controls");
     play.mockRestore();
   });

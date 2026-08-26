@@ -78,6 +78,10 @@ img {
   max-width: 100%;
 }
 
+img[loading="lazy"] {
+  content-visibility: auto;
+}
+
 .visually-hidden {
   position: absolute;
   width: 1px;
@@ -2455,7 +2459,8 @@ p {
   border-color: rgba(255, 255, 255, 0.26);
 }
 
-.screening-frame video {
+.screening-frame video,
+.screening-frame > img {
   width: 100%;
   height: 100%;
   display: block;
