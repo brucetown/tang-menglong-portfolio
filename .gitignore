@@ -1,0 +1,17 @@
+node_modules/
+.pnpm-store/
+dist/
+tmp/
+.DS_Store
+source-assets/
+.playwright-cli/
+.codex-tmp/
+.venv-ai-upscale/
+gfpgan/
+output/
+projects/
+tools/
+
+# Local design-review prototypes (kept locally, not published with the site)
+public/strengths-*
+public/strengths-review-card.css
