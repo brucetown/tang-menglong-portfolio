@@ -332,6 +332,10 @@ p {
   cursor: pointer;
 }
 
+.hero-screening-jump {
+  display: none;
+}
+
 .hero-scroll-cue {
   display: none;
 }
@@ -3543,6 +3547,32 @@ p {
   .menu-toggle {
     display: inline-flex;
     flex: 0 0 auto;
+  }
+
+  .hero-screening-jump {
+    display: inline-flex;
+    align-items: center;
+    margin-left: auto;
+    color: #fff;
+    font-family: var(--display-font);
+    font-size: clamp(0.56rem, 2.45vw, 0.72rem);
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: 0.015em;
+    text-align: left;
+    text-shadow: 0 1px 14px rgba(0, 58, 118, 0.42);
+    white-space: nowrap;
+  }
+
+  .hero-screening-jump span {
+    margin-left: 0.38em;
+    font-size: 1.2em;
+    transition: transform 180ms var(--ease-out);
+  }
+
+  .hero-screening-jump:active span,
+  .hero-screening-jump:focus-visible span {
+    transform: translateX(3px);
   }
 
   .nav-links {

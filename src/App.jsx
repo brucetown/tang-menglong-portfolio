@@ -866,6 +866,14 @@ function App() {
             ))}
           </div>
 
+          <a
+            className="hero-screening-jump"
+            href="#screening"
+            onClick={() => setMenuOpen(false)}
+          >
+            观看作品集视频，可直接跳转 <span aria-hidden="true">→</span>
+          </a>
+
           <button
             className="menu-toggle"
             type="button"
