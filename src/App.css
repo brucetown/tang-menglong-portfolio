@@ -3542,6 +3542,7 @@ p {
 
   .topbar {
     min-height: 64px;
+    gap: 0;
   }
 
   .menu-toggle {
@@ -3555,7 +3556,7 @@ p {
     margin-left: auto;
     color: #fff;
     font-family: var(--display-font);
-    font-size: clamp(0.56rem, 2.45vw, 0.72rem);
+    font-size: clamp(0.62rem, 2.7vw, 0.8rem);
     font-weight: 800;
     line-height: 1;
     letter-spacing: 0.015em;
