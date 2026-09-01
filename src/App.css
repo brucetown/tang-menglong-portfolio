@@ -78,10 +78,6 @@ img {
   max-width: 100%;
 }
 
-img[loading="lazy"] {
-  content-visibility: auto;
-}
-
 .visually-hidden {
   position: absolute;
   width: 1px;

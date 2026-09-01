@@ -238,15 +238,6 @@ function App() {
   };
 
   useEffect(() => {
-    const deferredImages = document.querySelectorAll('img[loading="lazy"]');
-
-    deferredImages.forEach((image) => {
-      image.decoding = "async";
-      image.fetchPriority = "low";
-    });
-  }, []);
-
-  useEffect(() => {
     const section = photographyRef.current;
     const sticky = photographyStickyRef.current;
     const leftRail = photographyLeftRef.current;
@@ -1328,8 +1319,6 @@ function App() {
                           src={item.poster}
                           alt={`${item.title} 封面`}
                           loading="lazy"
-                          decoding="async"
-                          fetchpriority="low"
                         />
                       )}
                       {!isActive && (
