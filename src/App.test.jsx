@@ -81,7 +81,7 @@ describe("Bruce Tang portfolio", () => {
     expect(photos).toHaveLength(14);
     expect(
       photos.every((photo) =>
-        photo.getAttribute("src")?.startsWith("/assets/optimized/photo-"),
+        photo.getAttribute("src")?.startsWith("/assets/webp/optimized/photo-"),
       ),
     ).toBe(true);
     const impactMetrics = within(impact).getByLabelText("Unsplash 作品传播数据");

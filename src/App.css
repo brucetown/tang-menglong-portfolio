@@ -2971,7 +2971,7 @@ p {
   content: "";
   position: absolute;
   inset: 0;
-  background: url("/assets/optimized/hero-locked-4k.jpg") center 44% / cover no-repeat;
+  background: var(--contact-background) center 44% / cover no-repeat;
   opacity: 0.1;
   mix-blend-mode: soft-light;
 }

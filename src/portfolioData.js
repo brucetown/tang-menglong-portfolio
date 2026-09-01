@@ -1,8 +1,8 @@
+import { assetPath } from "./assetPath";
+
 const withDeploymentAssetPaths = (value) => {
   if (typeof value === "string") {
-    return value.startsWith("/assets/")
-      ? `${import.meta.env.BASE_URL}${value.slice(1)}`
-      : value;
+    return value.startsWith("/assets/") ? assetPath(value) : value;
   }
 
   if (Array.isArray(value)) return value.map(withDeploymentAssetPaths);

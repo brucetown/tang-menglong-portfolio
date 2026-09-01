@@ -1651,7 +1651,11 @@ function App() {
         </section>
       </main>
 
-      <footer className="contact-section" id="contact">
+      <footer
+        className="contact-section"
+        id="contact"
+        style={{ "--contact-background": `url("${assetPath("assets/optimized/hero-locked-4k.jpg")}")` }}
+      >
         <div className="section-shell contact-shell">
           <MobilePageHeader title="联系合作" index="08" label="CONTACT" light />
           <h2>联系合作</h2>
